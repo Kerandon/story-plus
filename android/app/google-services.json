@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "419460009885",
+    "firebase_url": "https://story-plus-default-rtdb.firebaseio.com",
+    "project_id": "story-plus",
+    "storage_bucket": "story-plus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419460009885:android:61ca7b6ea7f5bf82a5a974",
+        "android_client_info": {
+          "package_name": "com.zenbition.stories_plus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUn-FgXdlYt05x9iSB9XhfEdlitKDntLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
