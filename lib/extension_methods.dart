@@ -1,11 +1,32 @@
-extension StringExtensions on String {
-  List<String> splitByWords() {
-    // This regex matches words and separates them with spaces
-    final regex = RegExp(r"[\w']+|[.,!?;]+| ");
-    final matches = regex.allMatches(this);
-    final words = matches.map((match) => match.group(0)!).toList();
+extension StringSplitter on String {
+  List<String> splitString() {
+    List<String> result = [];
+    RegExp regExp = RegExp(r"\s+|(?=[,.!;:?])|(?<=[,.!;:?])");
 
-    return words;
+    Iterable<Match> matches = regExp.allMatches(this);
+    int start = 0;
+
+    for (Match match in matches) {
+      if (start != match.start) {
+        result.add(substring(start, match.start));
+      }
+      result.add(substring(match.start, match.end));
+      start = match.end;
+    }
+
+    if (start < length) {
+      result.add(substring(start));
+    }
+
+    // Remove leading and trailing blank strings
+    while (result.isNotEmpty && result.first.trim().isEmpty) {
+      result.removeAt(0);
+    }
+    while (result.isNotEmpty && result.last.trim().isEmpty) {
+      result.removeLast();
+    }
+
+    return result;
   }
 }
 
@@ -20,17 +41,24 @@ extension WordCountExtension on String {
   }
 }
 
-extension ListStringExtension on List<String> {
-  String asStoryString() {
-    return map((word) => word.trim())
-        .where((word) => word.isNotEmpty)
-        .join(' ');
+extension StringListJoiner on List<String> {
+  String joinToString() {
+    return join('');
   }
 }
 
 extension WordCheckExtensions on String {
   bool isBlankSpaceOrPunctuation() {
-    return trim().isEmpty || (length == 1 && RegExp(r'[^\w\s]').hasMatch(this));
+    return trim().isEmpty || RegExp(r'^[\s\W]').hasMatch(this);
+  }
+}
+
+extension CapitalizeFirstLetterExtension on String {
+  String capitalizeFirstLetter() {
+    if (isEmpty) {
+      return this; // Return the string as is if it's empty
+    }
+    return this[0].toUpperCase() + substring(1); // Capitalize first letter and concatenate with the rest of the string
   }
 }
 

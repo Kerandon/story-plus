@@ -10,8 +10,7 @@ class StoryModel {
   StoryModel(this.title, this.content, [this.image]);
 
   Map<String, dynamic> toMap() {
-    final contentAsString = content.asStoryString();
-
+    final contentAsString = content.joinToString();
     return {
       'title': title,
       'content': contentAsString,
@@ -21,7 +20,7 @@ class StoryModel {
 
   factory StoryModel.fromMap(Map<String, dynamic> map) {
     String content = map['content'] as String;
-    List<String> contentSplitByWords = content.splitByWords();
+    List<String> contentSplitByWords = content.splitString();
     return StoryModel(map['title'], contentSplitByWords);
   }
 }

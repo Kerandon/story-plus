@@ -4,6 +4,7 @@ import 'package:story_plus/language_enum.dart';
 import 'package:translator/translator.dart';
 
 Future<void> speak(String text, AppState state) async {
+  print('speak');
   FlutterTts tts = FlutterTts();
   final translate = GoogleTranslator();
   if (state.language == Language.english) {

@@ -29,18 +29,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(appProvider);
-    final notifier = ref.read(appProvider.notifier);
-    final orientation = MediaQuery.of(context).orientation;
-    if (orientation == Orientation.landscape) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        notifier.setIsHorizontal(true);
-      });
-    }
-    if (orientation == Orientation.portrait) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        notifier.setIsHorizontal(false);
-      });
-    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -93,7 +81,7 @@ Future<List<StoryModel>> getStories() async {
     for (var d in data.docs) {
       String content = d.data().entries.elementAt(0).value;
       stories.add(
-        StoryModel(d.id, content.splitByWords()),
+        StoryModel(d.id, content.splitString()),
       );
     }
     await database.insertIntoDatabase(stories);
