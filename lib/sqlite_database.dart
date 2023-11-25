@@ -55,7 +55,6 @@ class SqliteDatabase {
     final db = await _initDatabase();
     return db.update(_table, {_column3: bytes},
         where: 'title = ?', whereArgs: [image]);
-
   }
 
   Future<Uint8List?> getImage(String image) async {
@@ -67,12 +66,9 @@ class SqliteDatabase {
       limit: 1,
     );
     return result.first.entries.elementAt(2).value;
-
-
   }
 
   Future deleteTable() async {
-
     String devicesPath = await getDatabasesPath();
     String path = join(devicesPath, '$_database.db');
     deleteDatabase(path);

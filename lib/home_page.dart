@@ -1,19 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:story_plus/app_state.dart';
 import 'package:story_plus/extension_methods.dart';
 import 'package:story_plus/main.dart';
 import 'package:story_plus/sqlite_database.dart';
 import 'package:story_plus/story_model.dart';
 import 'package:story_plus/story_tile.dart';
 
-class HomePage extends StatefulWidget {
+import 'constants.dart';
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   late final Future<List<StoryModel>> storiesFuture;
 
   @override
@@ -24,6 +28,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(appProvider);
+    final notifier = ref.read(appProvider.notifier);
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.landscape) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        notifier.setIsHorizontal(true);
+      });
+    }
+    if (orientation == Orientation.portrait) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        notifier.setIsHorizontal(false);
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -38,12 +55,6 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const Icon(Icons.minimize),
           ),
-          IconButton(
-            onPressed: () {
-              getIt<SqliteDatabase>().getStories();
-            },
-            icon: const Icon(Icons.add),
-          ),
         ],
       ),
       body: FutureBuilder<List<StoryModel>>(
@@ -52,11 +63,14 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return GridView.builder(
               itemCount: snapshot.data!.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: state.isHorizontal ? 3 : 1,
               ),
               itemBuilder: (context, index) => StoryTile(snapshot.data![index]),
             );
+          }
+          if (snapshot.hasError) {
+            return const Text(kErrorNoInternet);
           }
           return const Center(child: CircularProgressIndicator());
         },

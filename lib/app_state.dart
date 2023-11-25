@@ -3,32 +3,41 @@ import 'package:story_plus/story_model.dart';
 import 'language_enum.dart';
 
 class AppState {
+  final bool isHorizontal;
   final int tileTapped;
   final int wordTapped;
   final Language language;
   final StoryModel selectedStory;
 
   AppState(
-      {required this.tileTapped,
+      {required this.isHorizontal,
+      required this.tileTapped,
       required this.wordTapped,
       required this.language,
       required this.selectedStory});
 
   AppState copyWith(
-      {int? tileTapped,
+      {bool? isHorizontal,
+      int? tileTapped,
       int? wordTapped,
       Language? language,
       StoryModel? selectedStory}) {
     return AppState(
-        tileTapped: tileTapped ?? this.tileTapped,
-        wordTapped: wordTapped ?? this.wordTapped,
-        language: language ?? this.language,
-        selectedStory: selectedStory ?? this.selectedStory);
+      isHorizontal: isHorizontal ?? this.isHorizontal,
+      tileTapped: tileTapped ?? this.tileTapped,
+      wordTapped: wordTapped ?? this.wordTapped,
+      language: language ?? this.language,
+      selectedStory: selectedStory ?? this.selectedStory,
+    );
   }
 }
 
 class AppNotifier extends StateNotifier<AppState> {
   AppNotifier(state) : super(state);
+
+  void setIsHorizontal(bool horizontal) {
+    state = state.copyWith(isHorizontal: horizontal);
+  }
 
   void setTileTapped(int tile) {
     state = state.copyWith(tileTapped: tile);
@@ -40,8 +49,6 @@ class AppNotifier extends StateNotifier<AppState> {
 
   void setWordTapped(int index) {
     state = state.copyWith(wordTapped: index);
-    print('word tapped is $index and ${state.selectedStory.content[index]}');
-    // speak(storys[0].content[index], state);
   }
 
   void setLanguage() {
@@ -58,6 +65,7 @@ class AppNotifier extends StateNotifier<AppState> {
 final appProvider = StateNotifierProvider<AppNotifier, AppState>(
   (ref) => AppNotifier(
     AppState(
+      isHorizontal: true,
       tileTapped: 9999999,
       wordTapped: 9999999,
       language: Language.english,

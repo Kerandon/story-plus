@@ -1,25 +1,22 @@
 extension StringExtensions on String {
   List<String> splitByWords() {
-    // This regex matches words with punctuation as one group
-    final regex = RegExp(r"\b[\w']+[.,!?;]*");
+    // This regex matches words and separates them with spaces
+    final regex = RegExp(r"[\w']+|[.,!?;]+| ");
     final matches = regex.allMatches(this);
     final words = matches.map((match) => match.group(0)!).toList();
 
-    // Add an empty string after each word
-    final wordsWithSpaces = <String>[];
-    for (var word in words) {
-      wordsWithSpaces.add(word);
-      wordsWithSpaces.add(' ');
-    }
-
-    return wordsWithSpaces;
+    return words;
   }
 }
 
 extension WordCountExtension on String {
   int get wordCount {
-    // Split the string by whitespace and count the non-empty elements
-    return split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
+    // Split the string by common separators (space, period, comma, etc.)
+    final separators = RegExp(r'[\s,.!?;:]+');
+    final words = split(separators);
+
+    // Filter out empty elements and count non-empty ones
+    return words.where((word) => word.trim().isNotEmpty).length;
   }
 }
 
@@ -28,5 +25,21 @@ extension ListStringExtension on List<String> {
     return map((word) => word.trim())
         .where((word) => word.isNotEmpty)
         .join(' ');
+  }
+}
+
+extension WordCheckExtensions on String {
+  bool isBlankSpaceOrPunctuation() {
+    return trim().isEmpty || (length == 1 && RegExp(r'[^\w\s]').hasMatch(this));
+  }
+}
+
+extension IterableExtension<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T Function(int index, E e) f) sync* {
+    var index = 0;
+    for (final element in this) {
+      yield f(index, element);
+      index++;
+    }
   }
 }

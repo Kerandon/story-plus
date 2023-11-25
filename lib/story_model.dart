@@ -11,7 +11,7 @@ class StoryModel {
 
   Map<String, dynamic> toMap() {
     final contentAsString = content.asStoryString();
-    print('content as string $contentAsString');
+
     return {
       'title': title,
       'content': contentAsString,
